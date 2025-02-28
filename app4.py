@@ -298,15 +298,47 @@ with tabs[0]:
 # ----- Video Trends Tab -----
 with tabs[1]:
     st.header("Video Trends")
+
     if not filtered_data.empty:
-        sorted_data = filtered_data.sort_values('day')
         
-        # Calculating percentage change from previous day
+        sorted_data = filtered_data.sort_values('day')
+
         if len(sorted_data) >= 2:
+           ] 
             current_views = sorted_data['views'].iloc[-1]
+            current_day = sorted_data['day'].iloc[-1].strftime("%Y-%m-%d")
+
+            
             previous_views = sorted_data['views'].iloc[-2]
-            pct_change = (current_views - previous_views) / previous_views * 100 if previous_views != 0 else 0
-            st.metric(label="Daily % Change", value=f"{pct_change:.2f}%")
+            previous_day = sorted_data['day'].iloc[-2].strftime("%Y-%m-%d")
+
+            
+            if previous_views != 0:
+                pct_change = (current_views - previous_views) / previous_views * 100
+            else:
+                pct_change = 0
+
+            
+            if pct_change >= 0:
+                arrow_symbol = "↑"
+                arrow_color = "blue"
+            else:
+                arrow_symbol = "↓"
+                arrow_color = "red"
+
+            
+            st.markdown(
+                f"<h4>Views on {current_day}: {current_views:.0f}</h4>",
+                unsafe_allow_html=True
+            )
+
+            
+            st.markdown(
+                f"<p style='color:{arrow_color}; font-weight:bold;'>"
+                f"{arrow_symbol} {abs(pct_change):.2f}% from {previous_day}"
+                "</p>",
+                unsafe_allow_html=True
+            )
         else:
             st.write("Not enough data to calculate % change.")
 
@@ -340,19 +372,33 @@ with tabs[1]:
             hovermode="x unified"
         )
         st.plotly_chart(advanced_fig, use_container_width=True)
+
     else:
         st.write("No data available for metric comparison.")
-    
+
     st.subheader("Featured Video")
     st.video("https://www.youtube.com/watch?v=QtfqiBUDVGs&t=647s")
-    
-    fig2 = px.line(sorted_data, x='day', y='views_7_day_avg', title="7-Day Rolling Average of Views", template="plotly_white")
+
+    fig2 = px.line(
+        sorted_data,
+        x='day',
+        y='views_7_day_avg',
+        title="7-Day Rolling Average of Views",
+        template="plotly_white"
+    )
     fig2.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig2, use_container_width=True)
-    
-    fig3 = px.line(sorted_data, x='day', y='views_growth', title="Daily Views Growth (%)", template="plotly_white")
+
+    fig3 = px.line(
+        sorted_data,
+        x='day',
+        y='views_growth',
+        title="Daily Views Growth (%)",
+        template="plotly_white"
+    )
     fig3.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig3, use_container_width=True)
+
 
 # ----- Revenue Analysis Tab -----
 with tabs[2]:
