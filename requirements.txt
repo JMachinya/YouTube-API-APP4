@@ -1,0 +1,13 @@
+streamlit
+pandas
+plotly
+sqlalchemy
+prophet
+matplotlib
+wordcloud
+pycountry
+scikit-learn
+textblob
+psycopg2-binary
+statsmodels
+seaborn
