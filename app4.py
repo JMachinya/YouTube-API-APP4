@@ -304,7 +304,7 @@ with tabs[1]:
         sorted_data = filtered_data.sort_values('day')
 
         if len(sorted_data) >= 2:
-           ] 
+            
             current_views = sorted_data['views'].iloc[-1]
             current_day = sorted_data['day'].iloc[-1].strftime("%Y-%m-%d")
 
